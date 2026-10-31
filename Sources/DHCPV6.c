@@ -3588,7 +3588,9 @@ static BOOL AcquireDHCPv6(BYTE type)
 			CurInterface.State.PrefixChanged = FALSE;
 			LogMessage(L"PD Prefix changed - cleaning up and rebuild clean network");
 			CleanupOldAddresses();
-			CleanupOldRoutes();
+			// NOTE: Cleaning up routes here also removes the default route and we would not be able to restore it.
+			//       AddDefaultRoute will cache the gateway and then clean routes and restore the gateway.
+			// CleanupOldRoutes();
 			ApplyWANAddress();
 			ApplyLANPrefixes();
 			AddDefaultRoute();
@@ -3611,7 +3613,8 @@ static BOOL AcquireDHCPv6(BYTE type)
 		{
 			LogMessage(L"WAN/LAN address changed - cleaning up and rebuild clean network");
 			CleanupOldAddresses();
-			CleanupOldRoutes();
+			// NOTE: See above
+			// CleanupOldRoutes();
 			ApplyWANAddress();
 			ApplyLANPrefixes();
 			AddDefaultRoute();
